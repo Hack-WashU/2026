@@ -2,8 +2,9 @@
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import flyer from "../assets/fall-build-challenge/flyer.webp";
 
-// TODO: 换成海报 QR 码指向的正式报名链接。
-const RSVP_URL = "https://airtable.com/app392TbnZ0FyfCrx/shri163yPRymBZXwJ";
+// 官方报名表单：HackWashU AI Build Challenge 2026 Registration
+const RSVP_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSchGkPDYyQ9BUmkwRkz_gxDGl-cCWSH4SkZkbktQNwuZGX4AA/viewform";
 
 // 活动结束后弹窗自动下线，不用回来改代码
 const EVENT_ENDS_AT = "2026-09-27T23:59:59";
