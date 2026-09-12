@@ -14,6 +14,8 @@ import workoutCoachScreenshot from "../assets/sponsor-page/projects/workoutcoach
 import mastercardLogo from "../assets/mastercard.png";
 import rgaLogo from "../assets/rga.png";
 import abLogo from "../assets/ab-tech.png";
+import flyerImage from "../assets/fall-build-challenge/flyer.webp";
+import { RSVP_URL, eventHasEnded, fallBuildChallenge } from "../data/fallBuildChallenge";
 
 const navItems = [
   { label: "Impact", href: "#impact" },
@@ -31,6 +33,9 @@ const stats = [
   { value: "32", label: "finalist teams across recent events" },
   { value: "13", label: "winning teams across recent events" },
 ];
+
+// 活动结束后这张卡片自动消失，不用回来删代码
+const showUpcoming = !eventHasEnded();
 
 const events = [
   {
@@ -222,10 +227,29 @@ const tiers = [
 
       <section id="events" class="events section-band">
         <div class="section-heading compact">
-          <p class="eyebrow">Recent Events</p>
-          <h2>Student-led events with momentum sponsors can see.</h2>
+          <p class="eyebrow">Events</p>
+          <h2>What is coming up, and the track record behind it.</h2>
         </div>
         <div class="event-grid">
+          <article v-if="showUpcoming" class="event-card upcoming">
+            <img :src="flyerImage" :alt="`${fallBuildChallenge.title} flyer`" />
+            <div class="event-content">
+              <p class="upcoming-badge">Upcoming</p>
+              <p class="event-season">{{ fallBuildChallenge.season }}</p>
+              <h3>{{ fallBuildChallenge.title }}</h3>
+              <p>{{ fallBuildChallenge.description }}</p>
+              <ul class="mini-stats">
+                <li v-for="fact in fallBuildChallenge.facts" :key="fact">{{ fact }}</li>
+              </ul>
+              <div class="tag-row">
+                <span v-for="tag in fallBuildChallenge.tags" :key="tag">{{ tag }}</span>
+              </div>
+              <div class="event-actions">
+                <a class="button primary" href="#contact">Sponsor this event</a>
+                <a class="text-link" :href="RSVP_URL" target="_blank" rel="noopener">Student? RSVP &rarr;</a>
+              </div>
+            </div>
+          </article>
           <article v-for="event in events" :key="event.title" class="event-card">
             <img :src="event.image" :alt="event.alt" />
             <div class="event-content">
@@ -623,13 +647,57 @@ p {
 
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
 .event-card img {
   aspect-ratio: 16 / 10;
   border-bottom: 1px solid var(--line);
+}
+
+.event-card.upcoming {
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--cyan);
+}
+
+/* 海报是 3:4 竖版，塞进 16:10 的图位里只能裁。
+   对准上半部分，露出活动名和日期，当作横幅用。 */
+.event-card.upcoming img {
+  object-fit: cover;
+  object-position: center 18%;
+  background: #0b1020;
+}
+
+.upcoming-badge {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--cyan);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: spartan-bold, sans-serif;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.4rem;
+}
+
+.event-actions .text-link {
+  font-family: spartan-sb, sans-serif;
+  font-size: 0.86rem;
+  text-decoration: underline;
+}
+
+.event-actions .text-link:hover {
+  color: var(--green);
 }
 
 .event-content {
@@ -945,6 +1013,12 @@ p {
   .hero-media img,
   .visual-panel img {
     aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 1100px) {
+  .event-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
