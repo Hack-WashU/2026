@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import flyer from "../assets/fall-build-challenge/flyer.webp";
+import { RSVP_URL, eventHasEnded } from "../data/fallBuildChallenge";
 
-// 官方报名表单：HackWashU AI Build Challenge 2026 Registration
-const RSVP_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSchGkPDYyQ9BUmkwRkz_gxDGl-cCWSH4SkZkbktQNwuZGX4AA/viewform";
-
-// 活动结束后弹窗自动下线，不用回来改代码
-const EVENT_ENDS_AT = "2026-09-27T23:59:59";
 
 // false = 每次打开首页都弹（当前设定）
 // true  = 每位访客只弹一次，记在 localStorage
@@ -70,7 +65,7 @@ function onKeydown(e: KeyboardEvent) {
 
 onMounted(() => {
   window.addEventListener("keydown", onKeydown);
-  if (Date.now() > new Date(EVENT_ENDS_AT).getTime() || alreadySeen()) return;
+  if (eventHasEnded() || alreadySeen()) return;
 
   timer = window.setTimeout(async () => {
     previouslyFocused = document.activeElement as HTMLElement;
